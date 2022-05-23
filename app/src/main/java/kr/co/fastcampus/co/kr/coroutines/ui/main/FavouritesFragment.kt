@@ -10,18 +10,17 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kr.co.fastcampus.co.kr.coroutines.databinding.FragmentMainBinding
+import kr.co.fastcampus.co.kr.coroutines.databinding.FragmentFavouritesBinding
 
-class ImageSearchFragment : Fragment() {
+class FavouritesFragment : Fragment() {
 
     private lateinit var imageSearchViewModel: ImageSearchViewModel
-    private val adapter: ImageSearchAdapter = ImageSearchAdapter {
-        imageSearchViewModel.toggle(it)
-    }
+    private val adapter = FavouritesAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        imageSearchViewModel = ViewModelProvider(requireActivity())[ImageSearchViewModel::class.java]
+        imageSearchViewModel =
+            ViewModelProvider(requireActivity())[ImageSearchViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -29,26 +28,21 @@ class ImageSearchFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val binding = FragmentMainBinding.inflate(inflater, container, false)
-        val root = binding.root
+        val binding = FragmentFavouritesBinding.inflate(inflater, container, false)
 
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = GridLayoutManager(context, 4)
-        binding.search.setOnClickListener {
-            val query = binding.editText.text.trim().toString()
-            imageSearchViewModel.handleQuery(query)
-        }
 
-        return root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         viewLifecycleOwner.lifecycleScope.launch {
-            imageSearchViewModel.pagingDataFlow
+            imageSearchViewModel.favoritesFlow
                 .collectLatest { items ->
-                    adapter.submitData(items)
+                    adapter.setItems(items)
                 }
         }
     }

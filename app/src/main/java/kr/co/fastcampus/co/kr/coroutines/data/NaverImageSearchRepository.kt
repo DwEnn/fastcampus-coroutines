@@ -20,8 +20,9 @@ class NaverImageSearchRepository {
 
         val client = OkHttpClient.Builder()
             .addInterceptor { chain ->
-                TODO("헤더를 추가해야합니다.")
                 val request = chain.request().newBuilder()
+                    .addHeader("X-Naver-Client-Id", "0Ru6rnE5qk1cv8PCvU7V")
+                    .addHeader("X-Naver-Client-Secret", "NLKWqvFtyI")
                     .build()
                 chain.proceed(request)
             }

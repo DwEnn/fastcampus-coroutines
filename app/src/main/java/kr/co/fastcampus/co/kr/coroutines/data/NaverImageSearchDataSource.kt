@@ -4,7 +4,6 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import kr.co.fastcampus.co.kr.coroutines.api.NaverImageSearchService
 import kr.co.fastcampus.co.kr.coroutines.model.Item
-import java.lang.Exception
 
 class NaverImageSearchDataSource(
     private val query: String,
@@ -22,9 +21,7 @@ class NaverImageSearchDataSource(
         val start = params.key ?: defaultStart
 
         return try {
-            // 시작
-            TODO("이미지를 가져와야합니다.")
-            // 끝
+            val response = imageSearchService.getImages(query, params.loadSize, start)
 
             val items = response.items
             val nextKey = if (items.isEmpty()) {
